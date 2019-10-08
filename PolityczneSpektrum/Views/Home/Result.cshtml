@@ -1,0 +1,94 @@
+﻿@model List<Question>
+@using System.Drawing;
+@using System.Windows.Forms;
+@{double x = 0;}
+@{double y = 0;}
+@{int szerokosc = 200;}
+@{int wysokosc = 213;}
+
+@for (int i = 0; i < Model.Count(); i++)
+{
+    if (Model[i].Type == 1)
+    {
+        var a = Model[i].Answer.ToString();
+        if (a == "Agree") { x += 3; }
+        else if (a == "SAgree") { x += 5; }
+        else if (a == "Disagree") { x -= 3; }
+        else if (a == "SDisagree") { x -= 5; }
+    }
+    else if (Model[i].Type == 2)
+    {
+        var a = Model[i].Answer.ToString();
+        if (a == "Agree") { y -= 3; }
+        else if (a == "SAgree") { y -= 5; }
+        else if (a == "Disagree") { y += 3; }
+        else if (a == "SDisagree") { y += 5; }
+    }
+
+}
+
+
+@{
+    string projectFolder = "..\\..\\";
+    Bitmap Img = new Bitmap(projectFolder + @"\Polityczne_Spektrum-master\PolityczneSpektrum\Imgs\crowdchart.png", true);
+    // Środek obrazka to 200/213
+    szerokosc += (int)x;
+    wysokosc += (int)y;
+    for (int i = (szerokosc-7); i !=(szerokosc + 7); i++)
+    {
+        for (int j = (wysokosc - 7); j != (wysokosc + 7); j++)
+        {
+            Img.SetPixel(i, j, Color.DarkRed);
+        }
+    }
+
+
+    Img.Save(projectFolder + @"\Polityczne_Spektrum-master\PolityczneSpektrum\Imgs\crowdchart2.png");
+
+
+
+}
+
+
+<div style="margin-left: 340px;">
+    <h1>Gratulacje! Twój wynik to:</h1>
+    <img style="position: relative;" src="~/Imgs/crowdchart2.png" />
+</div>
+
+<img style="display: block;margin-left: auto; margin-right: auto;" src="~/Imgs/default.png" />
+
+<hr />
+
+<p>
+    Tradycyjnym podziałem poglądów politycznych jest podział na lewicę i prawicę. Określenia te wywodzą się z czasów Rewolucji Francuskiej – lewicę stanowili politycy chcący wprowadzić nowy porządek społeczny i ekonomiczny, prawicę zaś ci, którzy byli przeciwni radykalnym zmianom. Nazwy te są do dziś używane do określania partii politycznych. Kryteria te korelują ze sobą w niewielkim stopniu i wiele kwestii, które znacznie bardziej wyraźnie dzielą partie (np. stosunek do integracji europejskiej, globalizacji), w ogóle nie mieści się w tym podziale. Współcześnie operuje się też takimi pojęciami jak skrajna prawica, prawica, centroprawica, centrum, centrolewica, lewica oraz skrajna lewica, jednak coraz częściej ten sposób klasyfikacji okazuje się niewystarczający.
+
+    Innym tradycyjnym kryterium podziału jest podział partii na konserwatywne oraz liberalne, alternatywnie zwane progresywnymi. Kryterium podziału jest wówczas idea praw jednostki i roli państwa w życiu społecznym i gospodarce.
+
+    W Europie partie zwykle dzieli się na obozy zależnie od wyznawanej przez nie ideologii. Podział ten wywodzi się jeszcze z XIX wieku, kiedy między partiami występowały bardzo duże różnice. Współcześnie różnice te objawiają się w większym stopniu w nazwie i w stosowanej retoryce niż w programie. Można zatem mówić o podziale partii według kryterium programowo-ideologicznego.
+</p>
+
+<br />
+
+@for (int i = 0; i < Model.Count(); i++)
+{
+
+
+    <div class="card panel-default" style="margin-top: 30px;">
+        <strong style="padding:10px;">@Model[i].Id</strong>
+        <div class="card-body">
+            @Model[i].Content
+            @{
+                switch (@Model[i].Answer)
+                {
+
+                    case Answer.Agree: <strong><br />Odp: Zgadzam nie</strong> break;
+                    case Answer.Disagree: <strong><br />Odp: Nie zgaddzam sie</strong> break;
+                    case Answer.SDisagree: <strong><br />Odp: Stanowczo sie nie zgadzam</strong> break;
+                    case Answer.None: <strong><br />Odp: Brak odpowiedzi</strong> break;
+                    case Answer.SAgree: <strong><br />Odp: Stanowczo sie zgadzam</strong> break;
+                }
+            }
+        </div>
+    </div>
+}
+
